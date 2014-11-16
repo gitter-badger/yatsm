@@ -8,12 +8,17 @@ before_install:
     - export PATH=$HOME/anaconda/bin:$PATH
     # Update conda
     - conda update --yes conda
+    # Add in Fortran compiler
+    - sudo apt-get install gfortran
+install:
+    # Create conda matching requirements
     - conda create --yes -n venv python=$TRAVIS_PYTHON_VERSION pip nose numpy scipy gdal scikit-learn cython matplotlib
     - source activate venv
-install:
+    # Rest of dependencies
     - "pip install -r requirements.txt"
     - "pip install -r requirements-dev.txt"
     - "pip install pytest"
+    # Install YATSM
     - "pip install -e ."
 script:
     - py.test
