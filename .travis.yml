@@ -9,10 +9,10 @@ before_install:
     # Update conda
     - conda update --yes conda
     # Add in Fortran compiler
-    - sudo apt-get install gfortran
+    - sudo apt-get install -y gfortran
 install:
     # Create conda matching requirements
-    - conda create --yes -n venv python=$TRAVIS_PYTHON_VERSION pip nose numpy scipy gdal scikit-learn cython matplotlib
+    - conda create --yes -n venv python=$TRAVIS_PYTHON_VERSION pip nose numpy scipy cython gdal scikit-learn statsmodels matplotlib
     - source activate venv
     # Rest of dependencies
     - "pip install -r requirements.txt"
