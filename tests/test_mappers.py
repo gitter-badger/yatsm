@@ -36,6 +36,7 @@ class Test_YATSMMap(unittest.TestCase):
 
     def setUp(self):
         """ Setup test data filenames and load known truth dataset """
+        self.script = 'yatsm_map.py'
         # Test data
         self.root = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'data')
@@ -62,7 +63,7 @@ class Test_YATSMMap(unittest.TestCase):
             r=self.root,
             o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
 
-        msg, retcode = _run(args)
+        msg, retcode = _run(self.script, args)
         self.assertEqual(retcode, 0)
 
     def test_coef_result_robust(self):
@@ -74,14 +75,14 @@ class Test_YATSMMap(unittest.TestCase):
             rr=self.robust_result_dir,
             o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
 
-        msg, retcode = _run(args)
+        msg, retcode = _run(self.script, args)
         self.assertEqual(retcode, 0)
 
         # Test robust coefficients, expecting error
         args = '--root {r} --robust coef 2000-06-01 {o}'.format(
             r=self.root,
             o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
-        msg, retcode = _run(args)
+        msg, retcode = _run(self.script, args)
 
         self.assertEqual(retcode, 1)
 
