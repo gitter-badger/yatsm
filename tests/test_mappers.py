@@ -10,6 +10,8 @@ import unittest
 import numpy as np
 from osgeo import gdal
 
+from utils_testing import TestMaps
+
 
 def _run(script, args):
     """ Use subprocess to run script with arguments
@@ -32,11 +34,12 @@ def _run(script, args):
     return stdout, retcode
 
 
-class Test_YATSMMap(unittest.TestCase):
+class Test_YATSMMap(TestMaps):
 
     def setUp(self):
         """ Setup test data filenames and load known truth dataset """
         self.script = 'yatsm_map.py'
+
         # Test data
         self.root = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'data')
@@ -44,9 +47,10 @@ class Test_YATSMMap(unittest.TestCase):
         self.robust_result_dir = os.path.join(self.root, 'YATSM_ROBUST')
         self.data_cache = os.path.join(self.root, 'cache')
         self.example_img = os.path.join(self.root, 'example_img')
+        self.outdir = os.path.join(self.root, 'outdir')
 
         # Answers
-        self.outdir = os.path.join(self.root, 'outdir')
+        self.answers = os.path.join(self.root, 'answers')
 
         if not os.path.isdir(self.outdir):
             os.makedirs(self.outdir)
@@ -57,23 +61,30 @@ class Test_YATSMMap(unittest.TestCase):
             shutil.rmtree(self.outdir)
 
 # Test coefficients
-    def test_coef_result(self):
+    def test_coef(self):
         """ Test creating coefficient map """
+        output = os.path.join(self.outdir, 'coef_all.gtif')
+
         args = '--root {r} coef 2000-06-01 {o}'.format(
             r=self.root,
-            o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
+            o=output).split(' ')
 
         msg, retcode = _run(self.script, args)
         self.assertEqual(retcode, 0)
 
-    def test_coef_result_robust(self):
+        # Test output
+        self._compare_maps(os.path.join(self.outdir, output),
+                           os.path.join(self.answers, output))
+
+    def test_coef_robust(self):
         """ Test creating robust coefficient map """
+        output = 'coef_all_robust.gtif'
 
         # Test robust coefficients
         args = '--root {r} --result {rr} --robust coef 2000-06-01 {o}'.format(
             r=self.root,
             rr=self.robust_result_dir,
-            o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
+            o=os.path.join(self.outdir, output)).split(' ')
 
         msg, retcode = _run(self.script, args)
         self.assertEqual(retcode, 0)
@@ -81,10 +92,14 @@ class Test_YATSMMap(unittest.TestCase):
         # Test robust coefficients, expecting error
         args = '--root {r} --robust coef 2000-06-01 {o}'.format(
             r=self.root,
-            o=os.path.join(self.outdir, 'coef_all.gtif')).split(' ')
+            o=os.path.join(self.outdir, output)).split(' ')
         msg, retcode = _run(self.script, args)
 
         self.assertEqual(retcode, 1)
+
+        # Test output
+        self._compare_maps(os.path.join(self.outdir, output),
+                           os.path.join(self.answers, output))
 
     def test_coef_bands(self):
         """ Test if correct bands are output """
