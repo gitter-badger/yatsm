@@ -1,5 +1,6 @@
 """ Helper class & functions for testing
 """
+import subprocess
 import unittest
 
 import numpy as np
@@ -52,3 +53,23 @@ class TestMaps(unittest.TestCase):
                     test_arr, truth_arr,
                     err_msg='Band {0} is not equal'.format(b)
                 )
+
+    def _run(self, script, args):
+        """ Use subprocess to run script with arguments
+
+        Args:
+          script (str): script filename to run
+          args (list): program arguments
+
+        Returns:
+          tuple: stdout and exit code
+
+        """
+        proc = subprocess.Popen([script] + args,
+                                stdout=subprocess.PIPE
+                                )
+
+        stdout = proc.communicate()[0]
+        retcode = proc.returncode
+
+        return stdout, retcode

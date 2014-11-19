@@ -3,35 +3,9 @@
 """
 import os
 import shutil
-import subprocess
-import sys
 import unittest
 
-import numpy as np
-from osgeo import gdal
-
 from utils_testing import TestMaps
-
-
-def _run(script, args):
-    """ Use subprocess to run script with arguments
-
-    Args:
-      script (str): script filename to run
-      args (list): program arguments
-
-    Returns:
-      tuple: stdout and exit code
-
-    """
-    proc = subprocess.Popen([script] + args,
-                            stdout=subprocess.PIPE
-                            )
-
-    stdout = proc.communicate()[0]
-    retcode = proc.returncode
-
-    return stdout, retcode
 
 
 class Test_YATSMMap(TestMaps):
@@ -69,7 +43,7 @@ class Test_YATSMMap(TestMaps):
             r=self.root,
             o=output).split(' ')
 
-        msg, retcode = _run(self.script, args)
+        msg, retcode = self._run(self.script, args)
         self.assertEqual(retcode, 0)
 
         # Test output
@@ -86,14 +60,14 @@ class Test_YATSMMap(TestMaps):
             rr=self.robust_result_dir,
             o=os.path.join(self.outdir, output)).split(' ')
 
-        msg, retcode = _run(self.script, args)
+        msg, retcode = self._run(self.script, args)
         self.assertEqual(retcode, 0)
 
         # Test robust coefficients, expecting error
         args = '--root {r} --robust coef 2000-06-01 {o}'.format(
             r=self.root,
             o=os.path.join(self.outdir, output)).split(' ')
-        msg, retcode = _run(self.script, args)
+        msg, retcode = self._run(self.script, args)
 
         self.assertEqual(retcode, 1)
 
@@ -124,6 +98,36 @@ class Test_YATSMMap(TestMaps):
 
     def test_date_format(self):
         """ Test input date format type """
+        pass
+
+
+class Test_YATSMChangeMap(TestMaps):
+
+    def setUp(self):
+        """ Setup test data filenames and load known truth dataset """
+        self.script = 'yatsm_changemap.py'
+
+        # Test data
+        self.root = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 'data')
+        self.result_dir = os.path.join(self.root, 'YATSM')
+        self.robust_result_dir = os.path.join(self.root, 'YATSM_ROBUST')
+        self.data_cache = os.path.join(self.root, 'cache')
+        self.example_img = os.path.join(self.root, 'example_img')
+        self.outdir = os.path.join(self.root, 'outdir')
+
+        # Answers
+        self.answers = os.path.join(self.root, 'answers')
+
+        if not os.path.isdir(self.outdir):
+            os.makedirs(self.outdir)
+
+    def tearDown(self):
+        """ Deletes answer directory """
+        if os.path.isdir(self.outdir):
+            shutil.rmtree(self.outdir)
+
+    def test_numchange(self):
         pass
 
 
