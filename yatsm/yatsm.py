@@ -568,13 +568,25 @@ class YATSM(object):
         scores = np.zeros((self.consecutive, len(self.test_indices)),
                           dtype=np.float32)
 
+        # Indices of closest observations based on DOY
+        i_doy = np.argsort(np.mod(self.X[self.start:self.here, 1] -
+                                  self.X[self.here + self.consecutive, 1],
+                                  self.ndays))[:self.min_obs]
+
         for i in range(self.consecutive):
             for i_b, b in enumerate(self.test_indices):
                 m = self.models[b]
+                # Get dynamic RMSE
+                rmse = np.sqrt(np.sum(
+                    (self.Y[b, :].take(i_doy) -
+                        m.predict(self.X.take(i_doy, axis=0))) ** 2)
+                    / i_doy.size)
+
                 # Get test score for future observations
                 scores[i, i_b] = (np.abs(self.Y[b, self.here + i] -
                                          m.predict(self.X[self.here + i, :])) /
-                                  max(self.min_rmse, m.rmse))
+                                  max(self.min_rmse, rmse))
+                                  # max(self.min_rmse, m.rmse))
 
         # Check for scores above critical value
         mag = np.linalg.norm(scores, axis=1)
