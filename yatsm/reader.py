@@ -170,6 +170,26 @@ def read_row_BIP(filename, row, size, dtype):
     return data.reshape(size).T
 
 
+def read_row_BIP_memmap(filename, row, size, dtype):
+    """ Return a np.memmap view into the row of the file requested
+
+    Args:
+      filename (str): filename to read from
+      row (int): row to read
+      size (tuple): tuple of (int, int) containing the number of columns and
+        bands in the image
+      dtype (np.dtype): NumPy datatype of the image
+
+    Returns:
+      np.memmap: 2D array (nband x ncol) containing a memmap of the row of data
+
+    """
+    return np.memmap(
+        filename, dtype, 'r',
+        offset=np.dtype(dtype).itemsize * (row * size[0]) * size[1],
+        shape=size)
+
+
 class GDALStackReader(object):
     """ Simple class to read stacks using GDAL, keeping file objects open
 
