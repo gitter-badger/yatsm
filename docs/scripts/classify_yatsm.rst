@@ -5,4 +5,4 @@
 
 Classify all lines within an image using a trained classifier:
 
-.. command-output:: classify_yatsm.py -h
+.. command-output:: yatsm classify -h

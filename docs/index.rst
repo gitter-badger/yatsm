@@ -6,6 +6,32 @@ Yet Another Time Series Model (YATSM)
 About
 -----
 
+Yet Another Timeseries Model (YATSM) is a Python package for utilizing a
+collection of timeseries algorithms and methods designed to monitor the land
+surface using remotely sensed imagery. Algorithms within YATSM are coupled to
+utilities for running, exploring, visualizing, and making maps of timeseries
+analysis results. By making multiple approaches to timeseries analysis
+available to users in one place, the YATSM package aims to make combining
+methods from any one algorithm a simple task, thereby overcoming the weaknesses
+in any singular approach.
+
+For example, one might attempt to find land cover change using the YATSM
+implementation of the Continuous Change Detection and Classification (CCDC)
+(:cite:`Zhu2014152,Zhu201567`) algorithm. When looking at the changemaps
+created using :ref:`yatsm changemap <yatsm_changemap>` command, some
+ephemeral forest disturbances, like a particularly bad insect defoliation
+event that only affects the reflectance in one year, might be present. In this
+hypothetical case, the forest recovered the next year and CCDC fit two nearly
+identical models before and after the defoliation event. To remove this
+distinct, but ephemeral event, one might compare if fitting a break point and
+creating two segments is statistically different than ignoring the ephemeral
+change and fitting one model using a Chow Test :cite:`Chow1960`. With this
+ephemeral change event removed, long term mean phenology metrics, including
+the starting and ending of the growing season, of this forest can be fit for
+timeseries segments using an implementation of Melaas *et al*, 2013
+:cite:`Melaas2013`.
+
+
 The Yet Another TimeSeries Model (YATSM) algorithm is designed to monitor land
 surface phenomena, including land cover and land use change, using timeseries
 of remote sensing observations. The algorithm seeks to find distinct time
@@ -51,10 +77,12 @@ To get started with YATSM, please follow this user guide:
    guide/phenology
 
 
-Command Line Utilities
-----------------------
+Command Line Interface Utilities
+--------------------------------
 
-Documentation for individual command line applications from YATSM:
+The Command Line Interface (CLI) for YATSM is built using
+`click <http://click.pocoo.org/>`_ and is accessed using the ``yatsm`` command.
+Documentation about the CLI is available below:
 
 .. toctree::
    :maxdepth: 2
@@ -74,4 +102,3 @@ References
 .. bibliography:: static/index_refs.bib
    :style: unsrt
    :cited:
-

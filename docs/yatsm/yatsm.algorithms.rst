@@ -1,4 +1,4 @@
-yatsm.regression package
+yatsm.algorithms package
 ========================
 
 Submodules
@@ -6,14 +6,14 @@ Submodules
 
 .. toctree::
 
-   yatsm.regression.recresid
-   yatsm.regression.robust_fit
-   yatsm.regression.transforms
+   yatsm.algorithms.ccdc
+   yatsm.algorithms.postprocess
+   yatsm.algorithms.yatsm
 
 Module contents
 ---------------
 
-.. automodule:: yatsm.regression
+.. automodule:: yatsm.algorithms
     :members:
     :undoc-members:
     :show-inheritance:

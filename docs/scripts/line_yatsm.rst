@@ -5,4 +5,4 @@
 
 Run YATSM in batch mode for entire lines:
 
-.. command-output:: line_yatsm.py -h
+.. command-output:: yatsm line -h
