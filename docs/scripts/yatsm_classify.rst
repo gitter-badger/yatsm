@@ -1,6 +1,6 @@
-.. _classify_yatsm:
+.. _yatsm_classify:
 
-`classify_yatsm.py`
+`yatsm classify`
 -------------------
 
 Classify all lines within an image using a trained classifier:

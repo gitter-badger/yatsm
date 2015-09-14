@@ -1,6 +1,6 @@
-.. _line_yatsm:
+.. _yatsm_line:
 
-`line_yatsm.py`
+`yatsm line`
 ---------------
 
 Run YATSM in batch mode for entire lines:
